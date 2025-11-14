@@ -718,11 +718,11 @@ class App(Tk):
         #style.configure("Blue.TFrame", background="#ccccff")
         label_current_time = ttk.Label(basic_frame, text="Current: 0m00s", font=("Arial", 14), anchor="w")
         label_current_time.grid(row=0, column=0, padx=5, sticky="w")
-        label_current_speed = ttk.Label(basic_frame, text="🔥 0 /min", font=("Arial", 14))
+        label_current_speed = ttk.Label(basic_frame, text="🔥 0 /hr", font=("Arial", 14))
         label_current_speed.grid(row=0, column=1, padx=5, sticky="w")
         label_total_time = ttk.Label(basic_frame, text="Total: 0m00s", font=("Arial", 14), anchor="w")
         label_total_time.grid(row=1, column=0, padx=5, sticky="w")
-        label_total_speed = ttk.Label(basic_frame, text="🔥 0 /min", font=("Arial", 14))
+        label_total_speed = ttk.Label(basic_frame, text="🔥 0 /hr", font=("Arial", 14))
         label_total_speed.grid(row=1, column=1, padx=5, sticky="w")
         label_map_count = ttk.Label(basic_frame, text="🎫 0", font=("Arial", 14))
         label_map_count.grid(row=0, column=2, padx=5, sticky="w")
@@ -1074,8 +1074,8 @@ class MyThread(threading.Thread):
                     
                     # Calculate current speed (can be negative)
                     current_time_minutes = max((time.time() - t) / 60, 0.01)
-                    current_speed = income / current_time_minutes
-                    root.label_current_speed.config(text=f"🔥 {round(current_speed, 2)} /min")
+                    current_speed = (income / current_time_minutes) * 60
+                    root.label_current_speed.config(text=f"🔥 {round(current_speed, 2)} /hr")
                     
                     tmp_total_time = total_time + (time.time() - t)
                     m = int(tmp_total_time // 60)
@@ -1084,8 +1084,8 @@ class MyThread(threading.Thread):
                     
                     # Calculate total speed (can be negative)
                     total_time_minutes = max(tmp_total_time / 60, 0.01)
-                    total_speed = income_all / total_time_minutes
-                    root.label_total_speed.config(text=f"🔥 {round(total_speed, 2)} /min")
+                    total_speed = (income_all / total_time_minutes) * 60
+                    root.label_total_speed.config(text=f"🔥 {round(total_speed, 2)} /hr")
                 else:
                     t = time.time()
             except Exception as e:
