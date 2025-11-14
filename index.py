@@ -590,10 +590,20 @@ def deal_change(changed_text):
         # Reset baseline when entering a map - snapshot current state as starting point
         # This needs to happen BEFORE processing any bag changes from this log batch
         reset_map_baseline()
+        # Refresh UI so raw income per map shows 0 at the start of a new map
+        try:
+            root.reshow()
+        except Exception:
+            pass
         
     if exiting_map:
         is_in_map = False
         total_time += time.time() - t
+        # Refresh UI when leaving a map
+        try:
+            root.reshow()
+        except Exception:
+            pass
     
     # Load item data and prices
     id_table = {}
@@ -728,6 +738,9 @@ class App(Tk):
         label_map_count.grid(row=0, column=2, padx=5, sticky="w")
         label_current_earn = ttk.Label(basic_frame, text="🔥 0", font=("Arial", 14))
         label_current_earn.grid(row=1, column=2, padx=5, sticky="w")
+        # Raw income for the current map (not divided by time)
+        label_this_map_income = ttk.Label(basic_frame, text="💰 This Map: 0", font=("Arial", 12))
+        label_this_map_income.grid(row=2, column=0, padx=5, pady=(0,5), sticky="w")
         inner_pannel_drop_listbox = Listbox(advanced_frame, height=15, width=45, font=("Arial", 10))
         inner_pannel_drop_listbox.insert(END, "Drops will be displayed here")
         inner_pannel_drop_listbox.grid(row=0, column=0, columnspan=6, sticky="nsew")
@@ -766,6 +779,7 @@ class App(Tk):
         self.label_total_speed = label_total_speed
         self.label_map_count = label_map_count
         self.label_current_earn = label_current_earn
+        self.label_this_map_income = label_this_map_income
 
         # Create child windows
         self.inner_pannel_settings = Toplevel(self)
@@ -928,6 +942,7 @@ class App(Tk):
             
             # Update UI
             self.label_current_earn.config(text=f"🔥 0")
+            self.label_this_map_income.config(text=f"💰 This Map: 0")
             self.label_map_count.config(text=f"🎫 0")
             self.inner_pannel_drop_listbox.delete(1, END)
             self.label_initialize_status.config(text="Not initialized")
@@ -1002,6 +1017,8 @@ class App(Tk):
         else:
             tmp = drop_list
             self.label_current_earn.config(text=f"🔥 {round(income, 2)}")
+        # Always show raw income for the current map (not time-normalized)
+        self.label_this_map_income.config(text=f"💰 This Map: {round(income, 2)}")
         self.inner_pannel_drop_listbox.delete(1, END)
         for i in tmp.keys():
             item_id = str(i)
