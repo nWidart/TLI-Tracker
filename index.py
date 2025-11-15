@@ -618,13 +618,12 @@ def deal_change(changed_text):
         print(f"Error loading item data: {e}")
         return
     
-    # Scan for bag changes (drops) - this will use the baseline set above if we just entered a map
+    # Scan for bag changes to keep internal state up to date at all times
+    # Note: We only process and count changes while inside a map.
     drops = scan_for_bag_changes(changed_text)
-    if drops:
+    if is_in_map and drops:
         process_drops(drops, id_table, price_table)
         root.reshow()
-        if not is_in_map:
-            is_in_map = True
 
 # Debug function to examine log format and bag state
 def debug_log_format():
