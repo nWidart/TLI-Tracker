@@ -45,7 +45,7 @@ jobs:
 
       - name: Create archive of dist/
         run: |
-          Compress-Archive -Path dist\* -DestinationPath dist.zip -Force
+          Compress-Archive -Path dist\* -DestinationPath tli-tracker.zip -Force
         shell: pwsh
 
       - name: Create tag for release (if needed)
@@ -67,6 +67,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist.zip
+            tli-tracker.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
